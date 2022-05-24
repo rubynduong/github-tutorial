@@ -12,4 +12,6 @@
 `git checkout -b branchA` = `git branch branchA` + `git checkout branchA`
 `git checkout -b branchA c2` = `git branch branchA c2` + `git checkout branchA`
 
-These are changes made by ruby branch
+These are changes made by ruby branch. To be continued... 
+
+These are changes made by ruby2 branch 
