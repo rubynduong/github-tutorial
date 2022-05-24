@@ -11,3 +11,5 @@
 `git branch branchA c2` = create branchA at commit `c2`
 `git checkout -b branchA` = `git branch branchA` + `git checkout branchA`
 `git checkout -b branchA c2` = `git branch branchA c2` + `git checkout branchA`
+
+These are changes made by ruby branch
