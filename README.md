@@ -88,8 +88,8 @@ The preferred method of undoing shared history is `git revert`. A revert is safe
 
 ---
 
-Amend the last commit
-- To add another file:
+To amend the last commit
+- Commit without editing the message:
 
       git commit --amend --no-edit
       
