@@ -1,24 +1,34 @@
-# Notes on Git (and GitHub)
-This summary contains a quick summary of useful git commands.
+# Git notes
 
-For a full tutorial, see https://www.atlassian.com/git/tutorials.
+## Useful resources
 
+Tutorial: https://www.atlassian.com/git/tutorials
+
+Documentation: https://git-scm.com/book/en/v2
+
+Cheat sheet (PDF): https://training.github.com/downloads/github-git-cheat-sheet.pdf
+
+Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=workspace;
+
+----
 ## Concepts
-- A commit is a snapshot of a point in time or a point of interest along the timeline of a project's history.
-- A branch is a movable pointer to a specific commit.
+- A **commit** is a snapshot of a point in time or a point of interest along the timeline of a project's history.
+- A **branch** is a movable pointer to a specific commit.
 
+----
 ## Commands
 
 ### Getting Started
 
 1. Set up a repository on repository host (e.g. GitHub)
-2. Go to desired project directory and execute 
+2. Go to the local project directory and execute in the terminal
 
     `git clone <repo url>`
-3. Once the remote repository is set up, you will need to add a remote repo url to your local `git config` and set an upstream branch for your local branches. You al
+3. Once the remote repository is set up, you will need to add a remote repo url to your local `git config` and set an upstream branch for your local branches.
 
     `git remote add <remote_name> <remote_repo_url>`
 
+----
 ### General
 
 To view branches:
@@ -34,24 +44,30 @@ To view logs:
 To view current status:
 
     git status
+----
+### Synchronising Changes
 
-### Synchronising
-
-To download updates without affecting local repository:
+To download all history from the remote tracking branches:
     
     git fetch
+
+Then to combine the remote tracking branch into current local branch
+
+    git merge
     
-To download updates and immediately create a merge commit for the new remote content:
+You can also do both (`git fetch` + `git merge`) in one go with:
 
-    git pull 
+    git pull
 
-Equivalent to `git fetch` + `git merge`.
+It is generally recommended to rebase instead of merge, for a cleaner commit history.
 
 To download updates and immediately rebase:
 
     git pull --rebase <remote>
 
-Equivalent to `git fetch` + `git rebase`.
+(Equivalent to `git fetch` + `git rebase`)
+
+----
 
 ### Making Changes
 
@@ -61,7 +77,7 @@ To transfer commits from the local repository to a remote repository:
 
 In most cases (like in `main`), arguments are not necessary as the upstream remote is already set.
 
-### Manipulating Branches
+### Branches
 
 Create a branch at a specific commit:
 
