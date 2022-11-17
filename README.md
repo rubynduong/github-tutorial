@@ -43,6 +43,17 @@ Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=works
 |                                         | `<commit> <commit>` | view changes between two commits          |
 
 ----
+## Branches
+| Function                                      | Command                   | Option                    |
+|-----------------------------------------------|---------------------------|--------------------------:|
+| Create branch at HEAD                         | `git branch <name>`       |                           |
+|                                               | `<commit#>`               | starting point for branch |
+| Switch to branch                              | `git switch <name>`       |                           |
+|                                               | `-c`                      | create + switch to branch |
+| a) Delete branch                              | `git branch -d <name>`    |                           |
+| b) Push to origin to reflect change to branch | `git push origin :<name>` |                           |
+
+----
 ## Synchronising Changes
 | Function                                               | Command     | Option             |
 |--------------------------------------------------------|-------------|-------------------:|
@@ -68,17 +79,6 @@ Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=works
 | Transfer commits from local to remote | `git push <remote> <branch>` |                                          |
 |                                       | `-u`                         | set remote as upstream                   |
 
-----
-## Branches
-| Function                                      | Command                   | Option                    |
-|-----------------------------------------------|---------------------------|--------------------------:|
-| Create branch at HEAD                         | `git branch <name>`       |                           |
-|                                               | `<commit#>`               | starting point for branch |
-| Switch to branch                              | `git switch <name>`       |                           |
-|                                               | `-c`                      | create + switch to branch |
-| a) Delete branch                              | `git branch -d <name>`    |                           |
-| b) Push to origin to reflect change to branch | `git push origin :<name>` |                           |
-
 ---
 ## Undoing Changes
 | Function                                     | Command               | Option |
@@ -93,3 +93,47 @@ The preferred method of undoing shared history is `git revert`. A revert is safe
 (From https://www.atlassian.com/git/tutorials/undoing-changes)
 
 ---
+
+## Stash
+| Function                          | Command                   | Option                              |
+|-----------------------------------|---------------------------|------------------------------------:|
+| View stashes                      | `git stash list`          |                                     |
+| View list of files changed        | `git stash show`          |                                     |
+|                                   | `n`                       | list of files changed in stash{n}   |
+|                                   | `-p`                      | patch                               |
+| Stash changes (save to a stack)   | `git stash`               |                                     |
+|                                   | `-m 'stash-name'`         | with message                        |
+|                                   | `--all`                   | include untracked and ignored files |
+|                                   | `<filepath1> <filepath2>` | specific files                      |
+| Apply and delete last stash entry | `git stash pop`           |                                     |
+|                                   | `n`                       | Apply stash{n}                      |
+| Apply and keep stash entry        | `git stash apply`         |                                     |
+|                                   | `n`                       | Apply stash{n}                      |
+| Delete stash                      | `git stash drop`          |                                     |
+|                                   | `n`                       | Delete stash{n}                     |
+| Delete all stashes                | `git stash clear`         |                                     |
+
+---
+
+## Scenarios
+---
+### Force `git pull` to overwrite local files
+1. Update all `origin/<branch>` refs to latest:    
+2. Jump to the latest commit on `origin/master` and checkout the files:
+
+        git fetch --all
+        git reset --hard origin/master
+
+### Pop stash without losing uncommitted work
+1. Temporarily stage uncommitted changes:
+2. Apply stash
+- If there are any conflicts, fix them and run `git add .`
+3. Unstage everything
+
+        git add -u .
+        git stash pop
+        (git add .)
+        git reset
+
+git fetch origin other-branch
+git merge origin/other-branch
