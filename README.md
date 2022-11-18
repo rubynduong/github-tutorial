@@ -55,14 +55,20 @@ Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=works
 
 ----
 ## Synchronising Changes
-| Function                                               | Command     | Option             |
-|--------------------------------------------------------|-------------|-------------------:|
-| a) Download contents from the remote tracking branches | `git fetch` |                    |
-| b) Integrate changes into current local branch         | `git merge` |                    |
-| **a+b**                                                | `git pull`  |                    |
-|                                                        | `-r`        | fetch + rebase     |
-| Rebase                                                 | `git rebase`|                    |
-|                                                        | `-i`        | interactive rebase |
+| Function                                               | Command             | Option                                    |
+|--------------------------------------------------------|---------------------|------------------------------------------:|
+| a) Download contents from all remote tracking branches | `git fetch`         |                                           |
+|                                                        | `origin <branch>`   | fetch `branch` from origin                |
+| b) Integrate changes into current local branch         | `git merge`         |                                           |
+|                                                        | `--abort`           | abort merge                               |
+|                                                        | `<remote>/<branch>` | merge remote `branch` into current branch |
+| **a+b**                                                | `git pull`          | `git pull origin`                         |
+|                                                        | `-r`                | fetch + rebase                            |
+|                                                        | `origin <branch>`   | merge remote `branch` into current branch |
+| Rebase                                                 | `git rebase`        |                                           |
+|                                                        | `-i`                | interactive rebase                        |
+
+Merge vs Rebase: https://www.atlassian.com/git/tutorials/merging-vs-rebasing
 
 ----
 ## Making Changes
@@ -80,7 +86,7 @@ Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=works
 |                                       | `-u`                         | set remote as upstream                   |
 
 ---
-## Undoing Changes
+## Undoing Changes (work in progress)
 | Function                                     | Command               | Option |
 |----------------------------------------------|-----------------------|-------:|
 | Undo a **local commit** to specified commit  | `git reset <commit>`  |        |
@@ -117,6 +123,15 @@ The preferred method of undoing shared history is `git revert`. A revert is safe
 
 ## Scenarios
 ---
+### Resolve merge conflicts
+You can do one of two things:
+1. Decide not to merge: `git merge --abort`
+2. Resolve conflicts by using an editor. Then do:
+
+        git add <file>
+        git merge --continue
+You can also work through conflicts with `git mergetool` and `git diff`.
+
 ### Force `git pull` to overwrite local files
 1. Update all `origin/<branch>` refs to latest:    
 2. Jump to the latest commit on `origin/master` and checkout the files:
@@ -134,6 +149,3 @@ The preferred method of undoing shared history is `git revert`. A revert is safe
         git stash pop
         (git add .)
         git reset
-
-git fetch origin other-branch
-git merge origin/other-branch
