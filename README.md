@@ -26,21 +26,21 @@ Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=works
 
 ----
 ## General
-| Function                                | Command             | Option                                    |
-|---------------------------------------- |--------------       |-------------------------------------:     |
-| View status                             | `git status`        |                                           |
-| View branches                           | `git branch`        |                                           |
-|                                         | `-a`                | all branches                              |
-|                                         | `-r`                | remote branches                           |
-|                                         | `-vv`               | upstream branches and commit message      |
-| View commit history                     | `git log`           |                                           |
-|                                         | `--oneline`         | print on one line                         |
-|                                         | `-n <N>`            | view the last N commits                   |
-|                                         | `-p <filename>`     | history + changes to file for each commit |
-|                                         | `--follow <file>`   | history beyond renames                    |
-| View changes made relative to the index | `git diff`          |                                           |
-|                                         | `--cached`          | view staged changes relative to HEAD      |
-|                                         | `<commit> <commit>` | view changes between two commits          |
+| Function                                                         | Command             | Option                                    |
+|------------------------------------------------------------------|--------------       |-------------------------------------:     |
+| View status (difference between current branch and its upstream) | `git status`        |                                           |
+| View branches                                                    | `git branch`        |                                           |
+|                                                                  | `-a`                | all branches                              |
+|                                                                  | `-r`                | remote branches                           |
+|                                                                  | `-vv`               | upstream branches and commit message      |
+| View commit history                                              | `git log`           |                                           |
+|                                                                  | `--oneline`         | print on one line                         |
+|                                                                  | `-n <N>`            | view the last N commits                   |
+|                                                                  | `-p <filename>`     | history + changes to file for each commit |
+|                                                                  | `--follow <file>`   | history beyond renames                    |
+| View changes made relative to the index                          | `git diff`          |                                           |
+|                                                                  | `--cached`          | view staged changes relative to HEAD      |
+|                                                                  | `<commit> <commit>` | view changes between two commits          |
 
 ----
 ## Branches
@@ -55,18 +55,19 @@ Cheat sheet (interactive): https://ndpsoftware.com/git-cheatsheet.html#loc=works
 
 ----
 ## Synchronising Changes
-| Function                                               | Command             | Option                                    |
-|--------------------------------------------------------|---------------------|------------------------------------------:|
-| a) Download contents from all remote tracking branches | `git fetch`         |                                           |
-|                                                        | `origin <branch>`   | fetch `branch` from origin                |
-| b) Integrate changes into current local branch         | `git merge`         |                                           |
-|                                                        | `--abort`           | abort merge                               |
-|                                                        | `<remote>/<branch>` | merge remote `branch` into current branch |
-| **a+b**                                                | `git pull`          | `git pull origin`                         |
-|                                                        | `-r`                | fetch + rebase                            |
-|                                                        | `origin <branch>`   | merge remote `branch` into current branch |
-| Rebase                                                 | `git rebase`        |                                           |
-|                                                        | `-i`                | interactive rebase                        |
+| Function                                               | Command                | Option                                                                    |
+|--------------------------------------------------------|---------------------   |--------------------------------------------------------------------------:|
+| a) Download contents from all remote tracking branches | `git fetch`            |                                                                           |
+|                                                        | `origin <branch>`      | fetch `branch` from origin                                                |
+| b) Integrate changes into current local branch         | `git merge`            |                                                                           |
+|                                                        | `--abort`              | abort merge                                                               |
+|                                                        | `<remote>/<branch>`    | merge remote `branch` into current branch                                 |
+| **a+b**                                                | `git pull`             | `git pull origin`                                                         |
+|                                                        | `-r`                   | fetch + rebase                                                            |
+|                                                        | `--rebase --autostash` | stash local changes, fetch from remote, rebase on top of it and pop stash |
+|                                                        | `origin <branch>`      | merge remote `branch` into current branch                                 |
+| Rebase                                                 | `git rebase`           |                                                                           |
+|                                                        | `-i`                   | interactive rebase                                                        |
 
 Merge vs Rebase: https://www.atlassian.com/git/tutorials/merging-vs-rebasing
 
@@ -83,18 +84,26 @@ Merge vs Rebase: https://www.atlassian.com/git/tutorials/merging-vs-rebasing
 |                                       | `-m 'new message'`           | edit message                             |
 |                                       | `--no-edit`                  | commit without editing message           |
 | Transfer commits from local to remote | `git push <remote> <branch>` |                                          |
-|                                       | `-u`                         | set remote as upstream                   |
+|                                       | `-u`                         | set remote/branch as upstream            |
 
 ---
 ## Undoing Changes (work in progress)
 | Function                                     | Command               | Option |
-|----------------------------------------------|-----------------------|-------:|
-| Undo a **local commit** to specified commit  | `git reset <commit>`  |        |
-| Undo a **pushed commit** to specified commit | `git revert <commit>` |        |
+|----------------------------------------------------|-----------------------|-------:|
+| Undo a commit by removing the commit (local commit)  | `git reset`  |        |
+|       | `--soft <commit>` | move the branch name; does not change the index; does not change the working tree |
+|       | `--soft HEAD~1` | move committed files back to the staging area from the previous commit without removing their changes |
+|       | `--mixed <commit>` | move the branch name; reset the index to the commit; does not change the working tree |
+|       | `--hard <commit>` | move the branch name; reset the index to the commit; reset the working tree |
+| Restore a file with its version from another commit | `git restore` |        |
+|       | `--file` | restore file from  index / discard changes |
+|       | `--staged -- file` | unstage a staged file |
+|       | `--source <commit> --staged -- file` | copy file from commit to index without touching the copy in working tree |
+| Invert the changes in a commit by creating an additional commit (pushed commit) | `git revert <commit>` |        |
 
-A new commit is added at the end of the branch to 'cancel' the changes.
-
-The preferred method of undoing shared history is `git revert`. A revert is safer than a reset because it will not remove any commits from a shared history. A revert will retain the commits you want to undo and create a new commit that inverts the undesired commit. This method is safer for shared remote collaboration because a remote developer can then pull the branch and receive the new revert commit which undoes the undesired commit.
+`git reset` vs `git revert`
+1. `git revert` undoes a single commit at any point in history, while `git reset` removes all commits that occurred after the target commit.
+2. `git revert` does not change project history, which is safe (for collaboration) for commits that have been pushed to the remote.
 
 (From https://www.atlassian.com/git/tutorials/undoing-changes)
 
